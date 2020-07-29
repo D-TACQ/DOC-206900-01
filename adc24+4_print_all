@@ -1,0 +1,12 @@
+#!/bin/bash
+
+COLS=${COLS:--f1-8,24-}
+# create a server at port 6666
+# convert binary data to 28 columns of ascii
+# print only when $27 changes ($27 is event latch count)
+# trim to 12 columns for display
+nc -l -p 6666 | \
+ hexdump -e '28/4 "%08x," "\n"' | \
+ cut -d, $COLS
+
+

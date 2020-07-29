@@ -1,0 +1,39 @@
+# DEFAULT init for acq435, 43500 Hz, auto soft trigger
+#
+# created by deploy_sysconfig for uut:acq1001_425 mezz:acq435
+# by dt100@eigg-fs on Tue 21 Jul 18:54:00 BST 2020
+# git cf750c0c03d1d9e3c520c67f7f74d2fcc2b14589
+/usr/local/CARE/acq1001\+acq43x.init
+# Local clock and soft trigger
+set.site 0 sync_role master 128000
+
+# For other combinations try 'set.site 0 sync_role help'
+
+# customisation for NEC
+
+set.site 1 bank_mask=ABC        ;# 3 x 8 = 24 channels
+set.site 0 spad=1,4,0           ;# 4 column "ScratchPad"
+                                   
+run0 1 
+# early customisation in /mnt/lo
+# sample count embedded SPAD0
+set.site 0 SIG:SRC:CLK:0 INT01M ;# 1Mhz reference time
+set.site 0 spad1_us=1,0,1	;# embed the 1MHz at SPAD1
+set.site 1 event1=1,0,1           ;# enable DI latch
+set.site 0 spadcop2 1,1,0x30,1000 ;# embed last DI latch time in SPAD2
+set.site 0 spad3=0x33333333     ;# SPAD3 marker
+
+# normal behaviour: HOST connects to tcp/4210 and reads data.
+
+# alternate behaviour : UUT connects to HOST DATAPORT and sends data
+
+# Customize on site:
+export UUT_CONNECT_HOST=andros
+export UUT_CONNECT_PORT=6666
+
+# uncomment next line for uut_connect turnkey behaviour
+daemon /mnt/local/uut_connect 
+
+
+
+
